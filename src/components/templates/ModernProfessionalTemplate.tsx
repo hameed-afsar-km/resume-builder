@@ -20,6 +20,7 @@ export function ModernProfessionalTemplate({ data, config }: { data: ResumeData,
           <div className="flex flex-wrap gap-x-6 gap-y-2 text-[11px] font-bold uppercase tracking-widest mt-2 opacity-70">
             {data.personal.linkedin && <span className="flex items-center gap-1.5"><Linkedin size={14} strokeWidth={3}/> {data.personal.linkedin}</span>}
             {data.personal.github && <span className="flex items-center gap-1.5"><Github size={14} strokeWidth={3}/> {data.personal.github}</span>}
+            {data.personal.website && <span className="flex items-center gap-1.5"><Globe size={14} strokeWidth={3}/> {data.personal.website}</span>}
           </div>
         </div>
         

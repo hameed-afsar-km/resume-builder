@@ -116,10 +116,11 @@ export function CreativeTemplate({ data, config }: { data: ResumeData, config: T
       </div>
       
       {/* Footer Branding */}
-      <footer className="p-12 pt-0 flex justify-between items-center opacity-30">
-        <div className="text-[10px] font-black uppercase tracking-widest flex gap-4">
-           {data.personal.linkedin && <span>LI: {data.personal.linkedin}</span>}
-           {data.personal.github && <span>GH: {data.personal.github}</span>}
+      <footer className="p-12 pt-0 flex justify-between items-center opacity-40">
+        <div className="text-[10px] font-black uppercase tracking-[0.2em] flex flex-wrap gap-x-6 gap-y-2">
+           {data.personal.linkedin && <span className="flex items-center gap-1.5"><Linkedin size={10}/> {data.personal.linkedin}</span>}
+           {data.personal.github && <span className="flex items-center gap-1.5"><Github size={10}/> {data.personal.github}</span>}
+           {data.personal.website && <span className="flex items-center gap-1.5"><Globe size={10}/> {data.personal.website}</span>}
         </div>
       </footer>
     </div>

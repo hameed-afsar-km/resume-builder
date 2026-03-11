@@ -17,12 +17,15 @@ export function ExecutiveTemplate({ data, config }: { data: ResumeData, config: 
                {data.personal.firstName} {data.personal.lastName}
              </h1>
           </div>
-          <div className="flex justify-center flex-wrap gap-8 text-[10px] font-black uppercase tracking-[0.3em] opacity-50">
-            {data.personal.email && <span className="flex items-center gap-2">{data.personal.email}</span>}
-            <span className="opacity-20">•</span>
-            {data.personal.phone && <span className="flex items-center gap-2">{data.personal.phone}</span>}
-            <span className="opacity-20">•</span>
-            {data.personal.location && <span className="flex items-center gap-2">{data.personal.location}</span>}
+          <div className="flex justify-center flex-wrap gap-8 text-[10px] font-black uppercase tracking-[0.3em] opacity-60">
+            {data.personal.email && <span className="flex items-center gap-2 tracking-widest"><Mail size={12}/> {data.personal.email}</span>}
+            {data.personal.phone && <span className="flex items-center gap-2"><Phone size={12}/> {data.personal.phone}</span>}
+            {data.personal.location && <span className="flex items-center gap-2"><MapPin size={12}/> {data.personal.location}</span>}
+          </div>
+          <div className="flex justify-center flex-wrap gap-8 text-[10px] font-black uppercase tracking-[0.3em] opacity-60 mt-4">
+            {data.personal.linkedin && <span className="flex items-center gap-2"><Linkedin size={12}/> {data.personal.linkedin}</span>}
+            {data.personal.github && <span className="flex items-center gap-2"><Github size={12}/> {data.personal.github}</span>}
+            {data.personal.website && <span className="flex items-center gap-2"><Globe size={12}/> {data.personal.website}</span>}
           </div>
         </header>
 

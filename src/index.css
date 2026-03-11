@@ -1,0 +1,20 @@
+@import "tailwindcss";
+
+@media print {
+  @page {
+    margin: 0;
+    size: A4;
+  }
+  body {
+    margin: 0;
+    padding: 0;
+    background: white;
+  }
+  #resume-preview {
+    width: 210mm !important;
+    height: 297mm !important;
+    transform: none !important;
+    box-shadow: none !important;
+    margin: 0 !important;
+  }
+}

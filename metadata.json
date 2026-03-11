@@ -1,0 +1,5 @@
+{
+  "name": "ProResume Builder",
+  "description": "A professional resume builder with FAANG and MNC templates, supporting image uploads and PDF export.",
+  "requestFramePermissions": []
+}

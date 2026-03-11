@@ -50,12 +50,13 @@ export type TemplateConfig = {
   id: string;
   name: string;
   category: 'FAANG' | 'MNC' | 'Creative';
-  layout: 'single' | 'two-column-left' | 'two-column-right' | 'creative';
+  layout: 'single' | 'two-column-left' | 'two-column-right' | 'creative' | 'modern' | 'executive';
   fontFamily: string;
   primaryColor: string;
   secondaryColor: string;
   headerAlignment: 'left' | 'center' | 'split';
   showImage: boolean;
+  imageEffects: boolean;
   sidebarBg?: string;
   sidebarText?: string;
 };

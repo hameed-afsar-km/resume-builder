@@ -2,6 +2,8 @@ import { ResumeData, TemplateConfig } from '../types';
 import { SingleColumnTemplate } from './templates/SingleColumnTemplate';
 import { TwoColumnTemplate } from './templates/TwoColumnTemplate';
 import { CreativeTemplate } from './templates/CreativeTemplate';
+import { ModernProfessionalTemplate } from './templates/ModernProfessionalTemplate';
+import { ExecutiveTemplate } from './templates/ExecutiveTemplate';
 import { useEffect, useRef, useState } from 'react';
 
 interface Props {
@@ -39,8 +41,12 @@ export function ResumePreview({ data, template }: Props) {
       case 'two-column-left':
       case 'two-column-right':
         return <TwoColumnTemplate data={data} config={template} />;
-      case 'creative' as any: // I'll add this to types later
+      case 'creative':
         return <CreativeTemplate data={data} config={template} />;
+      case 'modern':
+        return <ModernProfessionalTemplate data={data} config={template} />;
+      case 'executive':
+        return <ExecutiveTemplate data={data} config={template} />;
       default:
         return <SingleColumnTemplate data={data} config={template} />;
     }

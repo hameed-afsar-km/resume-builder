@@ -29,4 +29,12 @@ export const TEMPLATES: TemplateConfig[] = [
   { id: 'c1', name: 'Milan Fashion', category: 'Creative', layout: 'creative', fontFamily: 'font-sans', primaryColor: '#f43f5e', secondaryColor: '#18181b', headerAlignment: 'left', showImage: true },
   { id: 'c2', name: 'Tokyo Tech', category: 'Creative', layout: 'creative', fontFamily: 'font-mono', primaryColor: '#10b981', secondaryColor: '#09090b', headerAlignment: 'left', showImage: true },
   { id: 'c3', name: 'Berlin Art', category: 'Creative', layout: 'creative', fontFamily: 'font-serif', primaryColor: '#8b5cf6', secondaryColor: '#0f172a', headerAlignment: 'left', showImage: true },
+
+  // Modern Professional (Sleek & Modular)
+  { id: 'm11', name: 'Zürich Professional', category: 'MNC', layout: 'modern', fontFamily: 'font-sans', primaryColor: '#2563eb', secondaryColor: '#1e293b', headerAlignment: 'left', showImage: true },
+  { id: 'm12', name: 'London Executive', category: 'MNC', layout: 'modern', fontFamily: 'font-sans', primaryColor: '#051c2c', secondaryColor: '#334155', headerAlignment: 'left', showImage: true },
+  
+  // Executive Leadership (Elite & Sophisticated)
+  { id: 'e1', name: 'New York Elite', category: 'Creative', layout: 'executive', fontFamily: 'font-serif', primaryColor: '#b45309', secondaryColor: '#1c1917', headerAlignment: 'center', showImage: false },
+  { id: 'e2', name: 'Singapore Global', category: 'Creative', layout: 'executive', fontFamily: 'font-sans', primaryColor: '#1e1b4b', secondaryColor: '#0f172a', headerAlignment: 'center', showImage: false },
 ];

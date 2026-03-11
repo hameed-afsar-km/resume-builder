@@ -62,11 +62,21 @@ export function ExecutiveTemplate({ data, config }: { data: ResumeData, config: 
             <div className="col-span-4 space-y-16">
               <section>
                 <h2 className="text-xs font-black uppercase tracking-[0.4em] mb-8 text-gray-400 border-b pb-4">Expertise</h2>
-                <div className="space-y-4">
-                  {data.skills.split(',').map((skill, i) => (
-                    <div key={i} className="flex items-center gap-4 group">
-                      <div className="w-1.5 h-1.5 rounded-full bg-gray-200 group-hover:bg-indigo-600 transition-colors" />
-                      <span className="text-[11px] font-black uppercase tracking-widest text-gray-700">{skill.trim()}</span>
+                <div className="space-y-6">
+                  {data.skills.map((skill, i) => (
+                    <div key={i} className="group">
+                       <div className="flex justify-between items-center mb-1">
+                         <span className="text-[10px] font-black uppercase tracking-widest text-gray-700">{skill.name}</span>
+                         {config.showSkillBars && <span className="text-[9px] font-black opacity-20">{skill.level}%</span>}
+                       </div>
+                       {config.showSkillBars && (
+                         <div className="h-[1px] w-full bg-gray-100 relative overflow-hidden">
+                           <div 
+                             className="absolute top-0 left-0 h-full bg-gray-400 transition-all duration-1000"
+                             style={{ width: `${skill.level}%` }}
+                           />
+                         </div>
+                       )}
                     </div>
                   ))}
                 </div>

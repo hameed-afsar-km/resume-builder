@@ -93,18 +93,30 @@ export function ModernProfessionalTemplate({ data, config }: { data: ResumeData,
 
         {/* Right Col: Skills & Education */}
         <div className="col-span-4 space-y-10">
-          {data.skills && (
+          {data.skills.length > 0 && (
             <section>
               <h2 className="text-xs font-black uppercase tracking-[0.2em] mb-6 text-gray-400">Core Expertise</h2>
-              <div className="flex flex-wrap gap-2">
-                {data.skills.split(',').map((skill, i) => (
-                  <span 
-                    key={i} 
-                    className="px-3 py-1.5 bg-gray-900 text-white text-[10px] font-black uppercase tracking-tighter rounded-md transform hover:-translate-y-1 transition-transform"
-                    style={{ backgroundColor: i % 2 === 0 ? primaryColor : '#1a1a1a' }}
-                  >
-                    {skill.trim()}
-                  </span>
+              <div className="flex flex-col gap-4">
+                {data.skills.map((skill, i) => (
+                  <div key={i} className="flex flex-col gap-1.5">
+                    <div className="flex justify-between items-center px-1">
+                       <span className="text-[10px] font-black uppercase tracking-tight text-gray-700">{skill.name}</span>
+                       {config.showSkillBars && <span className="text-[9px] font-black opacity-30">{skill.level}%</span>}
+                    </div>
+                    {config.showSkillBars ? (
+                      <div className="h-2 w-full bg-gray-100 rounded-sm p-0.5">
+                        <div 
+                          className="h-full rounded-sm transition-all duration-1000" 
+                          style={{ 
+                            backgroundColor: i % 2 === 0 ? primaryColor : '#1a1a1a',
+                            width: `${skill.level}%`
+                          }} 
+                        />
+                      </div>
+                    ) : (
+                      <div className="h-[2px] w-4 mt-0.5" style={{ backgroundColor: primaryColor }} />
+                    )}
+                  </div>
                 ))}
               </div>
             </section>

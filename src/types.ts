@@ -38,11 +38,16 @@ export type Project = {
   description: string;
 };
 
+export interface Skill {
+  name: string;
+  level: number;
+}
+
 export type ResumeData = {
   personal: PersonalInfo;
   experience: Experience[];
   education: Education[];
-  skills: string;
+  skills: Skill[];
   projects: Project[];
 };
 
@@ -57,6 +62,7 @@ export type TemplateConfig = {
   headerAlignment: 'left' | 'center' | 'split';
   showImage: boolean;
   imageEffects: boolean;
+  showSkillBars: boolean;
   sidebarBg?: string;
   sidebarText?: string;
 };

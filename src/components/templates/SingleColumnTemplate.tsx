@@ -91,10 +91,27 @@ export function SingleColumnTemplate({ data, config }: { data: ResumeData, confi
             </div>
           </div>
         )}
-        {data.skills && (
+        {data.skills.length > 0 && (
           <div>
             <h2 className="text-lg font-bold uppercase mb-3 tracking-wider" style={{ color: config.primaryColor }}>Skills</h2>
-            <p className="text-sm leading-relaxed">{data.skills}</p>
+            <div className="space-y-3">
+              {data.skills.map((skill, i) => (
+                <div key={i}>
+                  <div className="flex justify-between text-xs mb-1 font-bold">
+                    <span>{skill.name}</span>
+                    {config.showSkillBars && <span>{skill.level}%</span>}
+                  </div>
+                  {config.showSkillBars && (
+                    <div className="h-1 w-full bg-gray-100 rounded-full overflow-hidden">
+                      <div 
+                        className="h-full bg-indigo-600 rounded-full transition-all duration-700"
+                        style={{ width: `${skill.level}%`, backgroundColor: config.primaryColor }}
+                      />
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
           </div>
         )}
       </div>

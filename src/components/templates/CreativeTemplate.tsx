@@ -76,22 +76,27 @@ export function CreativeTemplate({ data, config }: { data: ResumeData, config: T
 
         {/* Right Side: Sidebar/Details */}
         <div className="w-[30%] bg-gray-50 p-10 pt-10 border-l border-gray-100">
-           {data.skills && (
+           {data.skills.length > 0 && (
              <section className="mb-10">
                <h2 className="text-[10px] font-black uppercase tracking-[0.3em] mb-6" style={{ color: primaryColor }}>Skills</h2>
-               <div className="flex flex-col gap-3">
-                 {data.skills.split(',').map((skill, i) => (
+               <div className="flex flex-col gap-4">
+                 {data.skills.map((skill, i) => (
                    <div key={i} className="flex flex-col gap-1">
-                     <span className="text-xs font-bold">{skill.trim()}</span>
-                     <div className="h-1 w-full bg-gray-200 rounded-full overflow-hidden">
-                       <div 
-                         className="h-full rounded-full" 
-                         style={{ 
-                           backgroundColor: primaryColor,
-                           width: `${Math.floor(Math.random() * 40) + 60}%` // Random visual flair
-                         }} 
-                       />
+                     <div className="flex justify-between items-center">
+                       <span className="text-xs font-bold">{skill.name}</span>
+                       {config.showSkillBars && <span className="text-[10px] opacity-40 font-black">{skill.level}%</span>}
                      </div>
+                     {config.showSkillBars && (
+                       <div className="h-1 w-full bg-gray-200 rounded-full overflow-hidden">
+                         <div 
+                           className="h-full rounded-full transition-all duration-1000" 
+                           style={{ 
+                             backgroundColor: primaryColor,
+                             width: `${skill.level}%`
+                           }} 
+                         />
+                       </div>
+                     )}
                    </div>
                  ))}
                </div>

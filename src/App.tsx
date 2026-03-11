@@ -52,7 +52,16 @@ const initialData: ResumeData = {
       gpa: '3.8'
     }
   ],
-  skills: 'JavaScript, TypeScript, React, Node.js, Python, SQL, AWS, Docker, Kubernetes, GraphQL',
+  skills: [
+    { name: 'JavaScript', level: 90 },
+    { name: 'TypeScript', level: 85 },
+    { name: 'React', level: 95 },
+    { name: 'Node.js', level: 80 },
+    { name: 'Python', level: 75 },
+    { name: 'SQL', level: 85 },
+    { name: 'AWS', level: 70 },
+    { name: 'Docker', level: 80 }
+  ],
   projects: [
     {
       id: '1',

@@ -51,18 +51,27 @@ export function TwoColumnTemplate({ data, config }: { data: ResumeData, config: 
             <h2 className="text-lg font-bold uppercase mb-4 border-b pb-2 tracking-wider flex items-center gap-2" style={{ borderColor: isDarkSidebar ? 'rgba(255,255,255,0.2)' : config.primaryColor }}>
               <Wrench size={18} /> Skills
             </h2>
-            <div className="flex flex-wrap gap-2">
-              {data.skills.split(',').map((skill, i) => (
-                <span 
-                  key={i} 
-                  className="px-3 py-1.5 text-xs rounded-md font-medium" 
-                  style={{ 
-                    backgroundColor: isDarkSidebar ? 'rgba(255,255,255,0.15)' : 'rgba(0,0,0,0.05)',
-                    color: sidebarText
-                  }}
-                >
-                  {skill.trim()}
-                </span>
+            <div className="space-y-4">
+              {data.skills.map((skill, i) => (
+                <div key={i} className="flex flex-col gap-1.5">
+                  <div className="flex justify-between items-center px-0.5">
+                    <span className="text-[11px] font-bold tracking-wide uppercase opacity-80">{skill.name}</span>
+                    {config.showSkillBars && <span className="text-[10px] font-black opacity-40">{skill.level}%</span>}
+                  </div>
+                  {config.showSkillBars ? (
+                    <div className="h-1.5 w-full bg-black/10 rounded-full overflow-hidden">
+                      <div 
+                        className="h-full rounded-full transition-all duration-1000" 
+                        style={{ 
+                          backgroundColor: isDarkSidebar ? '#fff' : config.primaryColor,
+                          width: `${skill.level}%`
+                        }} 
+                      />
+                    </div>
+                  ) : (
+                    <div className="h-[1px] w-full opacity-20 border-b border-current" />
+                  )}
+                </div>
               ))}
             </div>
           </div>

@@ -187,17 +187,64 @@ export function ResumeForm({ data, onChange, activeConfig, onConfigChange }: Pro
 
           {/* Skills */}
           <section>
-            <h2 className="text-xl font-bold mb-6 text-gray-900 flex items-center gap-2">
-              <Plus className="rotate-45 text-indigo-500" size={20} /> Skills
-            </h2>
-            <div className="p-6 border-2 border-gray-50 rounded-2xl bg-white shadow-sm">
-              <label className="block text-sm font-bold text-gray-700 mb-2">Comma separated skills</label>
-              <textarea
-                className="w-full border-gray-200 border rounded-xl p-3 text-sm focus:ring-2 focus:ring-indigo-500 outline-none min-h-[80px]"
-                value={data.skills}
-                onChange={e => onChange({ ...data, skills: e.target.value })}
-                placeholder="JavaScript, React, Python, Project Management..."
-              />
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-xl font-bold text-gray-900 flex items-center gap-2">
+                <Plus className="rotate-45 text-indigo-500" size={20} /> Skills & Expertise
+              </h2>
+              <button 
+                onClick={() => onChange({ ...data, skills: [...data.skills, { name: '', level: 80 }] })} 
+                className="text-sm font-bold text-indigo-600 hover:text-indigo-800 flex items-center gap-1 bg-indigo-50 px-3 py-1.5 rounded-lg transition-colors"
+              >
+                <Plus size={16} /> Add Skill
+              </button>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {data.skills.map((skill, index) => (
+                <div key={index} className="p-4 border-2 border-gray-50 rounded-2xl bg-white hover:border-indigo-100 transition-all shadow-sm">
+                  <div className="flex justify-between items-start mb-2">
+                    <div className="flex-1 mr-4">
+                      <input 
+                        type="text" 
+                        placeholder="Skill name" 
+                        value={skill.name} 
+                        onChange={e => {
+                          const newSkills = [...data.skills];
+                          newSkills[index].name = e.target.value;
+                          onChange({ ...data, skills: newSkills });
+                        }}
+                        className="w-full text-sm font-bold text-gray-900 border-none p-0 focus:ring-0 placeholder:text-gray-300"
+                      />
+                    </div>
+                    <button 
+                      onClick={() => {
+                        const newSkills = data.skills.filter((_, i) => i !== index);
+                        onChange({ ...data, skills: newSkills });
+                      }} 
+                      className="text-gray-300 hover:text-red-500 transition-colors"
+                    >
+                      <Trash2 size={14} />
+                    </button>
+                  </div>
+                  <div className="space-y-1">
+                    <div className="flex justify-between text-[10px] font-black uppercase text-gray-400">
+                      <span>Proficiency</span>
+                      <span>{skill.level}%</span>
+                    </div>
+                    <input 
+                      type="range" 
+                      min="0" 
+                      max="100" 
+                      value={skill.level} 
+                      onChange={e => {
+                        const newSkills = [...data.skills];
+                        newSkills[index].level = parseInt(e.target.value);
+                        onChange({ ...data, skills: newSkills });
+                      }}
+                      className="w-full h-1.5 bg-gray-100 rounded-lg appearance-none cursor-pointer accent-indigo-600"
+                    />
+                  </div>
+                </div>
+              ))}
             </div>
           </section>
         </div>
@@ -320,6 +367,19 @@ export function ResumeForm({ data, onChange, activeConfig, onConfigChange }: Pro
                   className={`w-12 h-6 rounded-full transition-colors relative ${activeConfig.imageEffects ? 'bg-indigo-600' : 'bg-gray-300'}`}
                 >
                   <div className={`absolute top-1 w-4 h-4 bg-white rounded-full transition-all ${activeConfig.imageEffects ? 'left-7' : 'left-1'}`} />
+                </button>
+              </div>
+
+              <div className="flex items-center justify-between p-4 bg-gray-50 rounded-2xl border border-gray-100">
+                <div>
+                  <div className="font-bold text-gray-900">Skill Proficiency Bars</div>
+                  <div className="text-xs text-gray-500">Show/hide visual skill level indicators</div>
+                </div>
+                <button 
+                  onClick={() => onConfigChange('showSkillBars', !activeConfig.showSkillBars)}
+                  className={`w-12 h-6 rounded-full transition-colors relative ${activeConfig.showSkillBars ? 'bg-indigo-600' : 'bg-gray-300'}`}
+                >
+                  <div className={`absolute top-1 w-4 h-4 bg-white rounded-full transition-all ${activeConfig.showSkillBars ? 'left-7' : 'left-1'}`} />
                 </button>
               </div>
 

@@ -1,6 +1,7 @@
 import { ResumeData, TemplateConfig } from '../types';
 import { SingleColumnTemplate } from './templates/SingleColumnTemplate';
 import { TwoColumnTemplate } from './templates/TwoColumnTemplate';
+import { CreativeTemplate } from './templates/CreativeTemplate';
 import { useEffect, useRef, useState } from 'react';
 
 interface Props {
@@ -31,22 +32,32 @@ export function ResumePreview({ data, template }: Props) {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
+  const renderTemplate = () => {
+    switch (template.layout) {
+      case 'single':
+        return <SingleColumnTemplate data={data} config={template} />;
+      case 'two-column-left':
+      case 'two-column-right':
+        return <TwoColumnTemplate data={data} config={template} />;
+      case 'creative' as any: // I'll add this to types later
+        return <CreativeTemplate data={data} config={template} />;
+      default:
+        return <SingleColumnTemplate data={data} config={template} />;
+    }
+  };
+
   return (
     <div ref={containerRef} className="w-full h-full flex justify-center overflow-auto print:overflow-visible">
       <div 
-        className="transition-all duration-200 ease-in-out print:!transform-none print:!w-auto print:!h-auto"
+        className="transition-all duration-200 ease-in-out print:!transform-none print:!w-auto print:!h-auto shadow-2xl"
         style={{ width: `${A4_WIDTH * scale}px`, height: `${A4_HEIGHT * scale}px` }}
       >
         <div
           id="resume-preview"
-          className="bg-white shadow-2xl overflow-hidden print:shadow-none print:w-[210mm] print:h-[297mm] print:m-0 origin-top-left"
+          className="bg-white overflow-hidden print:shadow-none print:w-[210mm] print:h-[297mm] print:m-0 origin-top-left"
           style={{ width: `${A4_WIDTH}px`, height: `${A4_HEIGHT}px`, transform: `scale(${scale})` }}
         >
-          {template.layout === 'single' ? (
-            <SingleColumnTemplate data={data} config={template} />
-          ) : (
-            <TwoColumnTemplate data={data} config={template} />
-          )}
+          {renderTemplate()}
         </div>
       </div>
     </div>

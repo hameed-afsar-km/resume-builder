@@ -49,8 +49,8 @@ export type ResumeData = {
 export type TemplateConfig = {
   id: string;
   name: string;
-  category: 'FAANG' | 'MNC';
-  layout: 'single' | 'two-column-left' | 'two-column-right';
+  category: 'FAANG' | 'MNC' | 'Creative';
+  layout: 'single' | 'two-column-left' | 'two-column-right' | 'creative';
   fontFamily: string;
   primaryColor: string;
   secondaryColor: string;

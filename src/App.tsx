@@ -8,8 +8,8 @@ import { ResumeForm } from './components/ResumeForm';
 import { ResumePreview } from './components/ResumePreview';
 import { TemplateSelector } from './components/TemplateSelector';
 import { TEMPLATES } from './constants';
-import { ResumeData } from './types';
-import { Printer } from 'lucide-react';
+import { ResumeData, TemplateConfig } from './types';
+import { Printer, Zap } from 'lucide-react';
 
 const initialData: ResumeData = {
   personal: {
@@ -68,25 +68,45 @@ const initialData: ResumeData = {
 export default function App() {
   const [data, setData] = useState<ResumeData>(initialData);
   const [selectedTemplateId, setSelectedTemplateId] = useState<string>(TEMPLATES[0].id);
+  const [activeConfig, setActiveConfig] = useState<TemplateConfig>(TEMPLATES[0]);
+
+  const handleTemplateSelect = (id: string) => {
+    const template = TEMPLATES.find(t => t.id === id);
+    if (template) {
+      setSelectedTemplateId(id);
+      setActiveConfig(template);
+    }
+  };
+
+  const updateConfig = (field: keyof TemplateConfig, value: string | boolean) => {
+    setActiveConfig(prev => ({ ...prev, [field]: value }));
+  };
 
   const handlePrint = () => {
     window.print();
   };
 
   return (
-    <div className="h-screen bg-gray-50 flex flex-col font-sans overflow-hidden">
+    <div className="h-screen bg-gray-50 flex flex-col font-sans overflow-hidden text-gray-900">
       {/* Header */}
-      <header className="bg-white border-b px-6 py-4 flex justify-between items-center z-10 print:hidden shrink-0">
-        <h1 className="text-2xl font-bold text-gray-900 tracking-tight">ProResume Builder</h1>
+      <header className="bg-white border-b px-6 py-4 flex justify-between items-center z-10 print:hidden shrink-0 shadow-sm">
+        <div className="flex items-center gap-3 group cursor-pointer">
+          <div className="w-10 h-10 bg-gradient-to-tr from-indigo-600 to-violet-500 rounded-xl flex items-center justify-center text-white shadow-lg shadow-indigo-200 group-hover:scale-110 transition-transform duration-300">
+            <Zap size={22} fill="currentColor" />
+          </div>
+          <h1 className="text-2xl font-black text-gray-900 tracking-tight">
+            Resume<span className="text-indigo-600">Craft</span> <span className="text-xs align-top bg-indigo-100 text-indigo-600 px-1.5 py-0.5 rounded-md ml-1 font-bold">AI</span>
+          </h1>
+        </div>
         <div className="flex items-center gap-6">
           <TemplateSelector
             templates={TEMPLATES}
             selectedId={selectedTemplateId}
-            onSelect={setSelectedTemplateId}
+            onSelect={handleTemplateSelect}
           />
           <button
             onClick={handlePrint}
-            className="flex items-center gap-2 bg-black text-white px-5 py-2.5 rounded-lg hover:bg-gray-800 transition-colors font-medium shadow-sm"
+            className="flex items-center gap-2 bg-indigo-600 text-white px-5 py-2.5 rounded-xl hover:bg-indigo-700 transition-all duration-200 font-semibold shadow-md shadow-indigo-100 active:scale-95"
           >
             <Printer size={18} />
             <span>Export PDF</span>
@@ -96,16 +116,23 @@ export default function App() {
 
       {/* Main Content */}
       <main className="flex-1 flex overflow-hidden print:overflow-visible print:block">
-        {/* Left Pane: Form */}
-        <div className="w-1/2 border-r bg-white overflow-y-auto p-8 print:hidden">
-          <ResumeForm data={data} onChange={setData} />
+        {/* Left Pane: Form & Customization */}
+        <div className="w-[45%] border-r bg-white overflow-y-auto print:hidden border-gray-100">
+          <div className="p-8">
+            <ResumeForm 
+              data={data} 
+              onChange={setData} 
+              activeConfig={activeConfig} 
+              onConfigChange={updateConfig} 
+            />
+          </div>
         </div>
 
         {/* Right Pane: Preview */}
-        <div className="w-1/2 bg-gray-200 flex justify-center p-8 print:w-full print:p-0 print:bg-white print:overflow-visible">
+        <div className="flex-1 bg-gray-100 flex justify-center p-8 print:w-full print:p-0 print:bg-white print:overflow-visible overflow-auto">
           <ResumePreview
             data={data}
-            template={TEMPLATES.find(t => t.id === selectedTemplateId)!}
+            template={activeConfig}
           />
         </div>
       </main>

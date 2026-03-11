@@ -24,4 +24,9 @@ export const TEMPLATES: TemplateConfig[] = [
   { id: 'm8', name: 'Accenture Tech', category: 'MNC', layout: 'two-column-right', fontFamily: 'font-sans', primaryColor: '#A100FF', secondaryColor: '#000000', headerAlignment: 'left', showImage: true, sidebarBg: '#000000', sidebarText: '#ffffff' },
   { id: 'm9', name: 'IBM Watson', category: 'MNC', layout: 'two-column-left', fontFamily: 'font-mono', primaryColor: '#0F62FE', secondaryColor: '#525252', headerAlignment: 'left', showImage: true, sidebarBg: '#f4f4f4', sidebarText: '#161616' },
   { id: 'm10', name: 'Cisco Network', category: 'MNC', layout: 'two-column-right', fontFamily: 'font-sans', primaryColor: '#00BCEB', secondaryColor: '#005073', headerAlignment: 'left', showImage: true, sidebarBg: '#005073', sidebarText: '#ffffff' },
+  
+  // Creative (High Impact & Visual)
+  { id: 'c1', name: 'Milan Fashion', category: 'Creative', layout: 'creative', fontFamily: 'font-sans', primaryColor: '#f43f5e', secondaryColor: '#18181b', headerAlignment: 'left', showImage: true },
+  { id: 'c2', name: 'Tokyo Tech', category: 'Creative', layout: 'creative', fontFamily: 'font-mono', primaryColor: '#10b981', secondaryColor: '#09090b', headerAlignment: 'left', showImage: true },
+  { id: 'c3', name: 'Berlin Art', category: 'Creative', layout: 'creative', fontFamily: 'font-serif', primaryColor: '#8b5cf6', secondaryColor: '#0f172a', headerAlignment: 'left', showImage: true },
 ];

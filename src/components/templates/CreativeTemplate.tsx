@@ -37,7 +37,7 @@ export function CreativeTemplate({ data, config }: { data: ResumeData, config: T
               <img 
                 src={data.personal.image} 
                 alt="Profile" 
-                className="w-32 h-32 object-cover relative z-10 grayscale hover:grayscale-0 transition-all duration-500 border-2 border-white"
+                className={`w-32 h-32 object-cover relative z-10 transition-all duration-500 border-2 border-white ${config.imageEffects ? 'grayscale hover:grayscale-0' : ''}`}
               />
             </div>
           )}

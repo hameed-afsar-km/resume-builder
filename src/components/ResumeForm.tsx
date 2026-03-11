@@ -310,6 +310,19 @@ export function ResumeForm({ data, onChange, activeConfig, onConfigChange }: Pro
                 </button>
               </div>
 
+              <div className="flex items-center justify-between p-4 bg-gray-50 rounded-2xl border border-gray-100">
+                <div>
+                  <div className="font-bold text-gray-900">Image Effects</div>
+                  <div className="text-xs text-gray-500">Enable hover effects (grayscale/rotate)</div>
+                </div>
+                <button 
+                  onClick={() => onConfigChange('imageEffects', !activeConfig.imageEffects)}
+                  className={`w-12 h-6 rounded-full transition-colors relative ${activeConfig.imageEffects ? 'bg-indigo-600' : 'bg-gray-300'}`}
+                >
+                  <div className={`absolute top-1 w-4 h-4 bg-white rounded-full transition-all ${activeConfig.imageEffects ? 'left-7' : 'left-1'}`} />
+                </button>
+              </div>
+
               <div>
                 <label className="block text-sm font-bold text-gray-700 mb-3">Header Alignment</label>
                 <div className="flex gap-2">

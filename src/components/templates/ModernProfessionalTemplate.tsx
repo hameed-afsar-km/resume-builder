@@ -29,7 +29,7 @@ export function ModernProfessionalTemplate({ data, config }: { data: ResumeData,
             <img 
               src={data.personal.image} 
               alt="Profile" 
-              className="w-32 h-32 object-cover relative rounded-2xl border-4 border-white shadow-xl rotate-3 transition-transform hover:rotate-0 duration-500"
+              className={`w-32 h-32 object-cover relative rounded-2xl border-4 border-white shadow-xl transition-all duration-500 ${config.imageEffects ? 'rotate-3 hover:rotate-0' : ''}`}
             />
           </div>
         )}

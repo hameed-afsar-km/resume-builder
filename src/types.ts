@@ -1,4 +1,5 @@
 export type PersonalInfo = {
+  title: string;
   firstName: string;
   lastName: string;
   email: string;
@@ -65,4 +66,5 @@ export type TemplateConfig = {
   showSkillBars: boolean;
   sidebarBg?: string;
   sidebarText?: string;
+  spacing: number;
 };

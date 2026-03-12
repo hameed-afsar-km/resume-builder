@@ -13,8 +13,9 @@ export function TwoColumnTemplate({ data, config }: { data: ResumeData, config: 
     <div className={`flex h-full bg-white ${config.fontFamily} ${isLeft ? 'flex-row' : 'flex-row-reverse'}`} style={{ color: config.secondaryColor }}>
       {/* Sidebar */}
       <div 
-        className="w-[35%] p-8 flex flex-col gap-8" 
+        className="w-[35%] flex flex-col gap-8" 
         style={{ 
+          padding: `${config.spacing * 0.25}rem`,
           backgroundColor: sidebarBg, 
           color: sidebarText, 
           printColorAdjust: 'exact', 
@@ -34,7 +35,12 @@ export function TwoColumnTemplate({ data, config }: { data: ResumeData, config: 
         
         <div className={config.headerAlignment === 'center' ? 'text-center' : 'text-left'}>
           <h1 className="text-3xl font-bold mb-1 tracking-tight" style={{ color: isDarkSidebar ? '#fff' : config.primaryColor }}>{data.personal.firstName}</h1>
-          <h1 className="text-3xl font-bold mb-6 tracking-tight" style={{ color: isDarkSidebar ? '#fff' : '#000' }}>{data.personal.lastName}</h1>
+          <h1 className="text-3xl font-bold tracking-tight" style={{ color: isDarkSidebar ? '#fff' : '#000', marginBottom: data.personal.title ? '0.25rem' : '1.5rem' }}>{data.personal.lastName}</h1>
+          {data.personal.title && (
+            <h2 className="text-lg font-medium tracking-wide mb-6" style={{ color: isDarkSidebar ? 'rgba(255,255,255,0.8)' : config.primaryColor }}>
+              {data.personal.title}
+            </h2>
+          )}
           
           <div className="space-y-3 text-sm opacity-90">
             {data.personal.email && <div className="flex items-center gap-3"><Mail size={16}/> <span className="break-all">{data.personal.email}</span></div>}
@@ -96,7 +102,7 @@ export function TwoColumnTemplate({ data, config }: { data: ResumeData, config: 
       </div>
 
       {/* Main Content */}
-      <div className="w-[65%] p-10 bg-white">
+      <div className="w-[65%] bg-white" style={{ padding: `${config.spacing * 0.25}rem` }}>
         {data.personal.summary && (
           <div className="mb-10">
             <h2 className="text-xl font-bold uppercase mb-4 flex items-center gap-2 tracking-wider" style={{ color: config.primaryColor }}>

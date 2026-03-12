@@ -6,14 +6,19 @@ export function SingleColumnTemplate({ data, config }: { data: ResumeData, confi
   const contactJustifyClass = config.headerAlignment === 'center' ? 'justify-center' : config.headerAlignment === 'split' ? 'justify-end' : 'justify-start';
 
   return (
-    <div className={`p-10 h-full bg-white ${config.fontFamily}`} style={{ color: config.secondaryColor }}>
+    <div className={`h-full bg-white ${config.fontFamily}`} style={{ color: config.secondaryColor, padding: `${config.spacing * 0.25}rem` }}>
       {/* Header */}
       <div className={`mb-6 border-b-2 pb-6`} style={{ borderColor: config.primaryColor }}>
         <div className={headerAlignClass}>
           <div>
-            <h1 className="text-4xl font-bold mb-2 tracking-tight" style={{ color: config.primaryColor }}>
+            <h1 className="text-4xl font-bold mb-1 tracking-tight" style={{ color: config.primaryColor }}>
               {data.personal.firstName} {data.personal.lastName}
             </h1>
+            {data.personal.title && (
+              <h2 className="text-xl font-medium tracking-wide" style={{ color: config.primaryColor, opacity: 0.8 }}>
+                {data.personal.title}
+              </h2>
+            )}
             <div className={`flex flex-wrap gap-4 text-sm mt-3 ${contactJustifyClass}`}>
               {data.personal.email && <span className="flex items-center gap-1"><Mail size={14}/> {data.personal.email}</span>}
               {data.personal.phone && <span className="flex items-center gap-1"><Phone size={14}/> {data.personal.phone}</span>}
@@ -31,7 +36,7 @@ export function SingleColumnTemplate({ data, config }: { data: ResumeData, confi
 
       {/* Summary */}
       {data.personal.summary && (
-        <div className="mb-6">
+        <div className="mb-6" style={{ marginTop: `${config.spacing * 0.1}rem` }}>
           <h2 className="text-lg font-bold uppercase mb-2 tracking-wider" style={{ color: config.primaryColor }}>Professional Summary</h2>
           <p className="text-sm leading-relaxed">{data.personal.summary}</p>
         </div>

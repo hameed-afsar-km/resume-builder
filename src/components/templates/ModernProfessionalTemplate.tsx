@@ -5,13 +5,18 @@ export function ModernProfessionalTemplate({ data, config }: { data: ResumeData,
   const primaryColor = config.primaryColor;
   
   return (
-    <div className={`p-12 h-full bg-white flex flex-col ${config.fontFamily}`} style={{ color: config.secondaryColor }}>
+    <div className={`h-full bg-white flex flex-col ${config.fontFamily}`} style={{ color: config.secondaryColor, padding: `${config.spacing * 0.25}rem` }}>
       {/* Sleek Header */}
       <header className="mb-10 flex justify-between items-start border-b-4 pb-8" style={{ borderColor: primaryColor }}>
         <div className="flex-1">
-          <h1 className="text-5xl font-black tracking-tighter uppercase mb-4" style={{ color: '#111' }}>
+          <h1 className="text-5xl font-black tracking-tighter uppercase mb-2" style={{ color: '#111' }}>
             {data.personal.firstName} <span style={{ color: primaryColor }}>{data.personal.lastName}</span>
           </h1>
+          {data.personal.title && (
+            <h2 className="text-xl font-bold tracking-[0.2em] uppercase mb-4 opacity-80" style={{ color: primaryColor }}>
+              {data.personal.title}
+            </h2>
+          )}
           <div className="flex flex-wrap gap-x-6 gap-y-2 text-[11px] font-bold uppercase tracking-widest opacity-70">
             {data.personal.email && <span className="flex items-center gap-1.5"><Mail size={14} strokeWidth={3}/> {data.personal.email}</span>}
             {data.personal.phone && <span className="flex items-center gap-1.5"><Phone size={14} strokeWidth={3}/> {data.personal.phone}</span>}
@@ -39,7 +44,7 @@ export function ModernProfessionalTemplate({ data, config }: { data: ResumeData,
       {/* Main Grid */}
       <div className="flex-1 grid grid-cols-12 gap-12">
         {/* Left Col: Main Info */}
-        <div className="col-span-8 space-y-10">
+        <div className="col-span-8 flex flex-col" style={{ gap: `${config.spacing * 0.5}rem` }}>
           {data.personal.summary && (
             <section>
               <h2 className="text-sm font-black uppercase tracking-[0.2em] mb-4 flex items-center gap-3">

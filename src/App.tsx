@@ -9,10 +9,12 @@ import { ResumePreview } from './components/ResumePreview';
 import { TemplateSelector } from './components/TemplateSelector';
 import { TEMPLATES } from './constants';
 import { ResumeData, TemplateConfig } from './types';
-import { Printer, Zap } from 'lucide-react';
+import { Printer, Zap, FileText } from 'lucide-react';
+import { exportToDocx } from './utils/docxExport';
 
 const initialData: ResumeData = {
   personal: {
+    title: 'Software Engineer',
     firstName: 'John',
     lastName: 'Doe',
     email: 'john.doe@example.com',
@@ -113,6 +115,13 @@ export default function App() {
             selectedId={selectedTemplateId}
             onSelect={handleTemplateSelect}
           />
+          <button
+            onClick={() => exportToDocx(data)}
+            className="flex items-center gap-2 bg-blue-100 text-blue-700 px-5 py-2.5 rounded-xl hover:bg-blue-200 transition-all duration-200 font-semibold shadow-sm active:scale-95"
+          >
+            <FileText size={18} />
+            <span>Export DOCX</span>
+          </button>
           <button
             onClick={handlePrint}
             className="flex items-center gap-2 bg-indigo-600 text-white px-5 py-2.5 rounded-xl hover:bg-indigo-700 transition-all duration-200 font-semibold shadow-md shadow-indigo-100 active:scale-95"

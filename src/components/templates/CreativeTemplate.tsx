@@ -21,6 +21,11 @@ export function CreativeTemplate({ data, config }: { data: ResumeData, config: T
               {data.personal.firstName}<br/>
               <span style={{ color: primaryColor }}>{data.personal.lastName}</span>
             </h1>
+            {data.personal.title && (
+              <h2 className="text-xl font-bold tracking-[0.2em] uppercase mt-4 opacity-80" style={{ color: primaryColor }}>
+                {data.personal.title}
+              </h2>
+            )}
             <div className="mt-6 flex flex-wrap gap-4 text-xs font-bold tracking-widest uppercase opacity-80">
                {data.personal.email && <span className="flex items-center gap-1"><Mail size={12}/> {data.personal.email}</span>}
                {data.personal.phone && <span className="flex items-center gap-1"><Phone size={12}/> {data.personal.phone}</span>}
@@ -45,9 +50,9 @@ export function CreativeTemplate({ data, config }: { data: ResumeData, config: T
       </header>
 
       {/* Content Area */}
-      <div className="flex-1 flex">
+      <div className="flex-1 flex" style={{ padding: `${config.spacing * 0.25}rem` }}>
         {/* Left Side: Main content */}
-        <div className="flex-1 p-12 pt-10">
+        <div className="flex-1 p-8 pt-6">
           {data.personal.summary && (
             <section className="mb-10">
               <h2 className="text-xs font-black uppercase tracking-[0.3em] mb-4" style={{ color: primaryColor }}>About Me</h2>
@@ -58,7 +63,7 @@ export function CreativeTemplate({ data, config }: { data: ResumeData, config: T
           {data.experience.length > 0 && (
             <section className="mb-10">
               <h2 className="text-xs font-black uppercase tracking-[0.3em] mb-6" style={{ color: primaryColor }}>Experience</h2>
-              <div className="space-y-8">
+              <div className="flex flex-col" style={{ gap: `${config.spacing * 0.5}rem` }}>
                 {data.experience.map(exp => (
                   <div key={exp.id} className="group">
                     <div className="flex justify-between items-baseline mb-2">
@@ -75,7 +80,7 @@ export function CreativeTemplate({ data, config }: { data: ResumeData, config: T
         </div>
 
         {/* Right Side: Sidebar/Details */}
-        <div className="w-[30%] bg-gray-50 p-10 pt-10 border-l border-gray-100">
+        <div className="w-[30%] bg-gray-50 p-8 pt-6 border-l border-gray-100">
            {data.skills.length > 0 && (
              <section className="mb-10">
                <h2 className="text-[10px] font-black uppercase tracking-[0.3em] mb-6" style={{ color: primaryColor }}>Skills</h2>

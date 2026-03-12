@@ -9,13 +9,18 @@ export function ExecutiveTemplate({ data, config }: { data: ResumeData, config: 
       {/* Top Banner Accent */}
       <div className="h-4 w-full" style={{ backgroundColor: primaryColor }} />
       
-      <div className="p-16 flex-1 flex flex-col">
+      <div className="flex-1 flex flex-col" style={{ padding: `${config.spacing * 0.5}rem` }}>
         {/* Minimalist Centered Header */}
         <header className="text-center mb-16 px-10">
-          <div className="inline-block relative">
-             <h1 className="text-6xl font-serif font-black tracking-tight text-gray-900 border-b-8 mb-6 pb-2 inline-block leading-tight" style={{ borderColor: primaryColor }}>
+           <div className="inline-block relative">
+             <h1 className="text-6xl font-serif font-black tracking-tight text-gray-900 border-b-8 mb-4 pb-2 inline-block leading-tight" style={{ borderColor: primaryColor }}>
                {data.personal.firstName} {data.personal.lastName}
              </h1>
+             {data.personal.title && (
+               <h2 className="text-xl font-bold tracking-[0.2em] uppercase text-gray-600 mb-6">
+                 {data.personal.title}
+               </h2>
+             )}
           </div>
           <div className="flex justify-center flex-wrap gap-8 text-[10px] font-black uppercase tracking-[0.3em] opacity-60">
             {data.personal.email && <span className="flex items-center gap-2 tracking-widest"><Mail size={12}/> {data.personal.email}</span>}
@@ -30,7 +35,7 @@ export function ExecutiveTemplate({ data, config }: { data: ResumeData, config: 
         </header>
 
         {/* Executive Content */}
-        <div className="max-w-4xl mx-auto w-full space-y-16">
+        <div className="max-w-4xl mx-auto w-full flex flex-col" style={{ gap: `${config.spacing * 0.5}rem` }}>
           {data.personal.summary && (
             <div className="relative">
               <span className="absolute -left-12 top-0 text-6xl font-serif text-gray-100 uppercase select-none pointer-events-none">Profile</span>

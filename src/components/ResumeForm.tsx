@@ -1,16 +1,69 @@
 import React, { useState } from 'react';
 import { ResumeData, TemplateConfig } from '../types';
-import { Plus, Trash2, Upload, Palette, Type, Layout } from 'lucide-react';
+import { Plus, Trash2, Upload, Palette, Type, Layout, GripVertical } from 'lucide-react';
+import {
+  DndContext,
+  closestCenter,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+  DragEndEvent
+} from '@dnd-kit/core';
+import {
+  arrayMove,
+  SortableContext,
+  sortableKeyboardCoordinates,
+  verticalListSortingStrategy,
+  useSortable
+} from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
 
 interface Props {
   data: ResumeData;
   onChange: (data: ResumeData) => void;
   activeConfig: TemplateConfig;
-  onConfigChange: (field: keyof TemplateConfig, value: string | boolean) => void;
+  onConfigChange: (field: keyof TemplateConfig, value: string | boolean | number) => void;
+}
+
+// Reusable Sortable Item wrapper
+const SortableItem: React.FC<{ id: string; children: React.ReactNode }> = ({ id, children }) => {
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+  } = useSortable({ id });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+  };
+
+  return (
+    <div ref={setNodeRef} style={style} className="relative group/item bg-white">
+      <div 
+        {...attributes} 
+        {...listeners}
+        className="absolute left-[-16px] top-1/2 -translate-y-1/2 opacity-0 group-hover/item:opacity-100 cursor-grab active:cursor-grabbing p-2 text-gray-400 hover:text-indigo-600 transition-opacity"
+      >
+        <GripVertical size={20} />
+      </div>
+      {children}
+    </div>
+  );
 }
 
 export function ResumeForm({ data, onChange, activeConfig, onConfigChange }: Props) {
   const [activeTab, setActiveTab] = useState<'content' | 'aesthetics'>('content');
+
+  const sensors = useSensors(
+    useSensor(PointerSensor),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    })
+  );
 
   const updatePersonal = (field: keyof ResumeData['personal'], value: string) => {
     onChange({ ...data, personal: { ...data.personal, [field]: value } });
@@ -42,8 +95,19 @@ export function ResumeForm({ data, onChange, activeConfig, onConfigChange }: Pro
     onChange({ ...data, [field]: data[field].filter((item: any) => item.id !== id) });
   };
 
+  const handleDragEnd = (event: DragEndEvent, field: 'experience' | 'education' | 'projects') => {
+    const { active, over } = event;
+    if (over && active.id !== over.id) {
+      const activeElementIndex = data[field].findIndex((i: any) => i.id === active.id);
+      const overElementIndex = data[field].findIndex((i: any) => i.id === over.id);
+      
+      const newArray = arrayMove(data[field] as any[], activeElementIndex, overElementIndex);
+      onChange({ ...data, [field]: newArray });
+    }
+  };
+
   return (
-    <div className="space-y-8 animate-in fade-in duration-500">
+    <div className="space-y-8 animate-in fade-in duration-500 pb-20">
       {/* Tabs */}
       <div className="flex gap-4 border-b border-gray-100 mb-8 sticky top-[-2rem] bg-white pt-2 z-10">
         <button 
@@ -61,7 +125,7 @@ export function ResumeForm({ data, onChange, activeConfig, onConfigChange }: Pro
       </div>
 
       {activeTab === 'content' ? (
-        <div className="space-y-10">
+        <div className="space-y-10 px-4">
           {/* Personal Info */}
           <section>
             <h2 className="text-xl font-bold mb-6 text-gray-900 flex items-center gap-2">
@@ -89,14 +153,17 @@ export function ResumeForm({ data, onChange, activeConfig, onConfigChange }: Pro
                 </div>
               </div>
 
-              <Input label="First Name" value={data.personal.firstName} onChange={e => updatePersonal('firstName', e.target.value)} />
-              <Input label="Last Name" value={data.personal.lastName} onChange={e => updatePersonal('lastName', e.target.value)} />
-              <Input label="Email" type="email" value={data.personal.email} onChange={e => updatePersonal('email', e.target.value)} />
-              <Input label="Phone" value={data.personal.phone} onChange={e => updatePersonal('phone', e.target.value)} />
-              <Input label="Location" value={data.personal.location} onChange={e => updatePersonal('location', e.target.value)} />
-              <Input label="LinkedIn" value={data.personal.linkedin} onChange={e => updatePersonal('linkedin', e.target.value)} />
-              <Input label="GitHub" value={data.personal.github} onChange={e => updatePersonal('github', e.target.value)} />
-              <Input label="Portfolio/Website" value={data.personal.website} onChange={e => updatePersonal('website', e.target.value)} />
+              <div className="col-span-2">
+                <Input label="Professional Title" value={data.personal.title || ''} onChange={(e: any) => updatePersonal('title', e.target.value)} placeholder="e.g. Senior Software Engineer" />
+              </div>
+              <Input label="First Name" value={data.personal.firstName} onChange={(e: any) => updatePersonal('firstName', e.target.value)} />
+              <Input label="Last Name" value={data.personal.lastName} onChange={(e: any) => updatePersonal('lastName', e.target.value)} />
+              <Input label="Email" type="email" value={data.personal.email} onChange={(e: any) => updatePersonal('email', e.target.value)} />
+              <Input label="Phone" value={data.personal.phone} onChange={(e: any) => updatePersonal('phone', e.target.value)} />
+              <Input label="Location" value={data.personal.location} onChange={(e: any) => updatePersonal('location', e.target.value)} />
+              <Input label="LinkedIn" value={data.personal.linkedin} onChange={(e: any) => updatePersonal('linkedin', e.target.value)} />
+              <Input label="GitHub" value={data.personal.github} onChange={(e: any) => updatePersonal('github', e.target.value)} />
+              <Input label="Portfolio/Website" value={data.personal.website} onChange={(e: any) => updatePersonal('website', e.target.value)} />
               <div className="col-span-2">
                 <label className="block text-sm font-bold text-gray-700 mb-2">Professional Summary</label>
                 <textarea
@@ -122,35 +189,46 @@ export function ResumeForm({ data, onChange, activeConfig, onConfigChange }: Pro
                 <Plus size={16} /> Add Experience
               </button>
             </div>
-            <div className="space-y-6">
-              {data.experience.map((exp) => (
-                <div key={exp.id} className="p-6 border-2 border-gray-50 rounded-2xl bg-white hover:border-indigo-100 transition-all shadow-sm">
-                  <div className="flex justify-between items-start mb-4">
-                    <div className="bg-indigo-100 p-2 rounded-lg text-indigo-600">
-                      <Plus className="rotate-45" size={18} />
-                    </div>
-                    <button onClick={() => removeArrayItem('experience', exp.id)} className="text-gray-300 hover:text-red-500 transition-colors">
-                      <Trash2 size={18} />
-                    </button>
-                  </div>
-                  <div className="grid grid-cols-2 gap-5">
-                    <Input label="Company" value={exp.company} onChange={e => updateArrayItem('experience', exp.id, 'company', e.target.value)} />
-                    <Input label="Role" value={exp.role} onChange={e => updateArrayItem('experience', exp.id, 'role', e.target.value)} />
-                    <Input label="Start Date" value={exp.startDate} onChange={e => updateArrayItem('experience', exp.id, 'startDate', e.target.value)} placeholder="Jan 2020" />
-                    <Input label="End Date" value={exp.endDate} onChange={e => updateArrayItem('experience', exp.id, 'endDate', e.target.value)} placeholder="Present" />
-                    <div className="col-span-2">
-                      <label className="block text-sm font-bold text-gray-700 mb-2">Description</label>
-                      <textarea
-                        className="w-full border-gray-200 border rounded-xl p-3 text-sm focus:ring-2 focus:ring-indigo-500 outline-none min-h-[100px]"
-                        value={exp.description}
-                        onChange={e => updateArrayItem('experience', exp.id, 'description', e.target.value)}
-                        placeholder="• Achieved X by doing Y..."
-                      />
-                    </div>
-                  </div>
+            
+            <DndContext 
+              sensors={sensors}
+              collisionDetection={closestCenter}
+              onDragEnd={(e) => handleDragEnd(e, 'experience')}
+            >
+              <SortableContext items={data.experience.map(e => e.id)} strategy={verticalListSortingStrategy}>
+                <div className="space-y-6">
+                  {data.experience.map((exp) => (
+                    <SortableItem key={exp.id} id={exp.id}>
+                      <div className="p-6 border-2 border-gray-50 rounded-2xl bg-white hover:border-indigo-100 transition-all shadow-sm">
+                        <div className="flex justify-between items-start mb-4">
+                          <div className="bg-indigo-100 p-2 rounded-lg text-indigo-600">
+                            <Plus className="rotate-45" size={18} />
+                          </div>
+                          <button onClick={() => removeArrayItem('experience', exp.id)} className="text-gray-300 hover:text-red-500 transition-colors">
+                            <Trash2 size={18} />
+                          </button>
+                        </div>
+                        <div className="grid grid-cols-2 gap-5">
+                          <Input label="Company" value={exp.company} onChange={(e: any) => updateArrayItem('experience', exp.id, 'company', e.target.value)} />
+                          <Input label="Role" value={exp.role} onChange={(e: any) => updateArrayItem('experience', exp.id, 'role', e.target.value)} />
+                          <Input label="Start Date" value={exp.startDate} onChange={(e: any) => updateArrayItem('experience', exp.id, 'startDate', e.target.value)} placeholder="Jan 2020" />
+                          <Input label="End Date" value={exp.endDate} onChange={(e: any) => updateArrayItem('experience', exp.id, 'endDate', e.target.value)} placeholder="Present" />
+                          <div className="col-span-2">
+                            <label className="block text-sm font-bold text-gray-700 mb-2">Description</label>
+                            <textarea
+                              className="w-full border-gray-200 border rounded-xl p-3 text-sm focus:ring-2 focus:ring-indigo-500 outline-none min-h-[100px]"
+                              value={exp.description}
+                              onChange={e => updateArrayItem('experience', exp.id, 'description', e.target.value)}
+                              placeholder="• Achieved X by doing Y..."
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    </SortableItem>
+                  ))}
                 </div>
-              ))}
-            </div>
+              </SortableContext>
+            </DndContext>
           </section>
 
           {/* Education */}
@@ -159,30 +237,100 @@ export function ResumeForm({ data, onChange, activeConfig, onConfigChange }: Pro
               <h2 className="text-xl font-bold text-gray-900 flex items-center gap-2">
                 <Plus className="rotate-45 text-indigo-500" size={20} /> Education
               </h2>
-              <button onClick={() => addArrayItem('education', { institution: '', degree: '', startDate: '', endDate: '', gpa: '' })} className="text-sm font-bold text-indigo-600 hover:text-indigo-800 flex items-center gap-1 bg-indigo-50 px-3 py-1.5 rounded-lg transition-colors">
+              <button 
+                onClick={() => addArrayItem('education', { institution: '', degree: '', startDate: '', endDate: '', gpa: '' })} 
+                className="text-sm font-bold text-indigo-600 hover:text-indigo-800 flex items-center gap-1 bg-indigo-50 px-3 py-1.5 rounded-lg transition-colors"
+              >
                 <Plus size={16} /> Add Education
               </button>
             </div>
-            <div className="space-y-6">
-              {data.education.map((edu) => (
-                <div key={edu.id} className="p-6 border-2 border-gray-50 rounded-2xl bg-white hover:border-indigo-100 transition-all shadow-sm">
-                  <div className="flex justify-between items-start mb-4">
-                    <div className="bg-indigo-100 p-2 rounded-lg text-indigo-600">
-                      <Plus className="rotate-45" size={18} />
-                    </div>
-                    <button onClick={() => removeArrayItem('education', edu.id)} className="text-gray-300 hover:text-red-500 transition-colors">
-                      <Trash2 size={18} />
-                    </button>
-                  </div>
-                  <div className="grid grid-cols-2 gap-5">
-                    <Input label="Institution" value={edu.institution} onChange={e => updateArrayItem('education', edu.id, 'institution', e.target.value)} />
-                    <Input label="Degree/Major" value={edu.degree} onChange={e => updateArrayItem('education', edu.id, 'degree', e.target.value)} />
-                    <Input label="Start Date" value={edu.startDate} onChange={e => updateArrayItem('education', edu.id, 'startDate', e.target.value)} />
-                    <Input label="End Date" value={edu.endDate} onChange={e => updateArrayItem('education', edu.id, 'endDate', e.target.value)} />
-                  </div>
+            
+            <DndContext 
+              sensors={sensors}
+              collisionDetection={closestCenter}
+              onDragEnd={(e) => handleDragEnd(e, 'education')}
+            >
+              <SortableContext items={data.education.map(e => e.id)} strategy={verticalListSortingStrategy}>
+                <div className="space-y-6">
+                  {data.education.map((edu) => (
+                    <SortableItem key={edu.id} id={edu.id}>
+                      <div className="p-6 border-2 border-gray-50 rounded-2xl bg-white hover:border-indigo-100 transition-all shadow-sm">
+                        <div className="flex justify-between items-start mb-4">
+                          <div className="bg-indigo-100 p-2 rounded-lg text-indigo-600">
+                            <Plus className="rotate-45" size={18} />
+                          </div>
+                          <button onClick={() => removeArrayItem('education', edu.id)} className="text-gray-300 hover:text-red-500 transition-colors">
+                            <Trash2 size={18} />
+                          </button>
+                        </div>
+                        <div className="grid grid-cols-2 gap-5">
+                          <Input label="Institution" value={edu.institution} onChange={(e: any) => updateArrayItem('education', edu.id, 'institution', e.target.value)} />
+                          <Input label="Degree/Major" value={edu.degree} onChange={(e: any) => updateArrayItem('education', edu.id, 'degree', e.target.value)} />
+                          <Input label="Start Date" value={edu.startDate} onChange={(e: any) => updateArrayItem('education', edu.id, 'startDate', e.target.value)} />
+                          <Input label="End Date" value={edu.endDate} onChange={(e: any) => updateArrayItem('education', edu.id, 'endDate', e.target.value)} />
+                          <Input label="GPA (Optional)" value={edu.gpa || ''} onChange={(e: any) => updateArrayItem('education', edu.id, 'gpa', e.target.value)} />
+                        </div>
+                      </div>
+                    </SortableItem>
+                  ))}
                 </div>
-              ))}
+              </SortableContext>
+            </DndContext>
+          </section>
+
+          {/* Projects */}
+          <section>
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-xl font-bold text-gray-900 flex items-center gap-2">
+                <Plus className="rotate-45 text-indigo-500" size={20} /> Projects
+              </h2>
+              <button 
+                onClick={() => addArrayItem('projects', { name: '', technologies: '', startDate: '', endDate: '', description: '' })} 
+                className="text-sm font-bold text-indigo-600 hover:text-indigo-800 flex items-center gap-1 bg-indigo-50 px-3 py-1.5 rounded-lg transition-colors"
+              >
+                <Plus size={16} /> Add Project
+              </button>
             </div>
+            
+            <DndContext 
+              sensors={sensors}
+              collisionDetection={closestCenter}
+              onDragEnd={(e) => handleDragEnd(e, 'projects')}
+            >
+              <SortableContext items={(data.projects || []).map(e => e.id)} strategy={verticalListSortingStrategy}>
+                <div className="space-y-6">
+                  {(data.projects || []).map((proj) => (
+                    <SortableItem key={proj.id} id={proj.id}>
+                      <div className="p-6 border-2 border-gray-50 rounded-2xl bg-white hover:border-indigo-100 transition-all shadow-sm">
+                        <div className="flex justify-between items-start mb-4">
+                          <div className="bg-indigo-100 p-2 rounded-lg text-indigo-600">
+                            <Plus className="rotate-45" size={18} />
+                          </div>
+                          <button onClick={() => removeArrayItem('projects', proj.id)} className="text-gray-300 hover:text-red-500 transition-colors">
+                            <Trash2 size={18} />
+                          </button>
+                        </div>
+                        <div className="grid grid-cols-2 gap-5">
+                          <Input label="Project Name" value={proj.name} onChange={(e: any) => updateArrayItem('projects', proj.id, 'name', e.target.value)} />
+                          <Input label="Technologies Used" value={proj.technologies} onChange={(e: any) => updateArrayItem('projects', proj.id, 'technologies', e.target.value)} placeholder="React, Node.js..." />
+                          <Input label="Start Date" value={proj.startDate} onChange={(e: any) => updateArrayItem('projects', proj.id, 'startDate', e.target.value)} />
+                          <Input label="End Date" value={proj.endDate} onChange={(e: any) => updateArrayItem('projects', proj.id, 'endDate', e.target.value)} />
+                          <div className="col-span-2">
+                            <label className="block text-sm font-bold text-gray-700 mb-2">Description</label>
+                            <textarea
+                              className="w-full border-gray-200 border rounded-xl p-3 text-sm focus:ring-2 focus:ring-indigo-500 outline-none min-h-[100px]"
+                              value={proj.description}
+                              onChange={e => updateArrayItem('projects', proj.id, 'description', e.target.value)}
+                              placeholder="• Built a scalable architecture..."
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    </SortableItem>
+                  ))}
+                </div>
+              </SortableContext>
+            </DndContext>
           </section>
 
           {/* Skills */}
@@ -249,7 +397,7 @@ export function ResumeForm({ data, onChange, activeConfig, onConfigChange }: Pro
           </section>
         </div>
       ) : (
-        <div className="space-y-10 animate-in slide-in-from-right-4 duration-300">
+        <div className="space-y-10 px-4 animate-in slide-in-from-right-4 duration-300">
           <section>
             <h2 className="text-xl font-bold mb-6 text-gray-900 flex items-center gap-2">
               <Palette className="text-indigo-500" size={20} /> Color Theme
@@ -341,9 +489,29 @@ export function ResumeForm({ data, onChange, activeConfig, onConfigChange }: Pro
 
           <section>
             <h2 className="text-xl font-bold mb-6 text-gray-900 flex items-center gap-2">
-              <Layout className="text-indigo-500" size={20} /> Layout Options
+              <Layout className="text-indigo-500" size={20} /> Layout & Spacing
             </h2>
             <div className="space-y-6">
+              <div className="p-4 bg-gray-50 rounded-2xl border border-gray-100">
+                <div className="flex justify-between items-center mb-2">
+                  <label className="block text-sm font-bold text-gray-900">Document Spacing</label>
+                  <span className="text-xs font-bold px-2 py-0.5 bg-indigo-100 text-indigo-700 rounded-full">{activeConfig.spacing || 4}x</span>
+                </div>
+                <input 
+                  type="range" 
+                  min="2" 
+                  max="8" 
+                  step="1"
+                  value={activeConfig.spacing || 4} 
+                  onChange={e => onConfigChange('spacing', parseInt(e.target.value))}
+                  className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-indigo-600 mt-2"
+                />
+                <div className="flex justify-between text-xs text-gray-400 font-medium px-1 mt-1">
+                  <span>Compact</span>
+                  <span>Spacious</span>
+                </div>
+              </div>
+
               <div className="flex items-center justify-between p-4 bg-gray-50 rounded-2xl border border-gray-100">
                 <div>
                   <div className="font-bold text-gray-900">Show Profile Image</div>
